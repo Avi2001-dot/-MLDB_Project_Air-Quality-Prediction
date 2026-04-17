@@ -1,0 +1,67 @@
+# Configuration file for Air Quality Prediction System
+# This file contains all system parameters and can be overridden by environment variables
+
+system:
+  environment: development  # development, staging, production
+  log_level: INFO
+  random_seed: 42
+
+data_sources:
+  cpcb:
+    dataset_name: "asaniczka/real-time-air-quality-index-aqi-india-2023-2025"
+    api_key_path: ~/.cpcb/credentials.json
+  iqair:
+    api_key: ${IQAIR_API_KEY}
+    base_url: "https://api.waqi.info"
+
+cities:
+  - Delhi
+  - Mumbai
+  - Bangalore
+  - Kolkata
+  - Chennai
+  - Hyderabad
+  - Pune
+  - Ahmedabad
+  - Jaipur
+  - Lucknow
+
+etl:
+  batch_size: 1000
+  processing_interval_hours: 1
+  max_retries: 3
+  retry_delay_seconds: 30
+
+modeling:
+  xgboost:
+    max_depth: 6
+    learning_rate: 0.1
+    n_estimators: 100
+  random_forest:
+    n_estimators: 100
+    max_depth: 15
+    min_samples_split: 5
+  cv_folds: 3
+  test_size: 0.2
+
+streaming:
+  kafka_bootstrap_servers: "localhost:9092"
+  topic: "aqi-events"
+  consumer_group: "aqi-consumer"
+  max_latency_ms: 1000
+
+alerts:
+  dedup_window_hours: 1
+  prediction_threshold: 150
+
+dashboard:
+  refresh_interval_minutes: 5
+  port: 8501
+  host: "0.0.0.0"
+
+storage:
+  bronze_path: "data/bronze"
+  silver_path: "data/silver"
+  gold_path: "data/gold"
+  models_path: "data/models"
+  logs_path: "logs"
